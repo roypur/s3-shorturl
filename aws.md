@@ -15,7 +15,6 @@ Once you've configured one SDK or the CLI, you can use the same credentials for 
 Environment Variables
 
 All the SDKs except the .NET SDK now can automatically look for credentials in the same environment variables: AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. 
-If you're working with temporary security credentials, you can also keep the session token in AWS_SESSION_TOKEN.
 ###Credentials File and Profiles
 
 Instead of keeping credentials in environment variables, you can now put credentials into a single file that's in a central location. The default location is this:
