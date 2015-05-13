@@ -10,7 +10,7 @@ $HOME/.s3-shorturl/config.json
         "profile":"aws-credentials-profile"
     }
     
-[Configure Amazon Credentials](http://9f.no/ee0a)
+[Configure Amazon Credentials](http://github.com/roypur/s3-shorturl/AWS.md)
     
 ##Command line
 
