@@ -1,6 +1,7 @@
 #S3 URL shortener
 
 ##Config file
+$HOME/.s3-shorturl/config.json
 
     {
         "region":"amazon-region",
