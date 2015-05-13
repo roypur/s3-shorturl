@@ -6,10 +6,11 @@ $HOME/.s3-shorturl/config.json
     {
         "region":"amazon-region",
         "bucket":"amazon-bucket",
-        "key-id":"aws_access_key_id",
-        "secret-key":"aws_secret_access_key",
-        "domain":"domain_to_use_in_links"
+        "domain":"domain_to_use_in_links",
+        "profile":"aws-credentials-profile"
     }
+    
+[http://9f.no/ee0a](Configure amazon credentials)
     
 ##Command line
 

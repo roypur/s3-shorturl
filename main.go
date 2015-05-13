@@ -7,11 +7,28 @@ import (
     "os"
     "fmt"
 )
-var cred *aws.Config;
+var auth *aws.Config;
 
 func main(){
     if(getConf()){
-        cred = &aws.Config{Region: config["region"], Credentials: credentials.NewStaticCredentials(config["key-id"], config["secret-key"], "")};
+        
+        var cred *credentials.Credentials;
+        
+        if(len(config["profile"])>0){
+    
+            cred = credentials.NewChainCredentials(
+        
+            []credentials.Provider{
+                &credentials.EnvProvider{},
+                &credentials.SharedCredentialsProvider{Filename: "", Profile: config["profile"]},
+                &credentials.EC2RoleProvider{},
+            })
+            auth = &aws.Config{Region: config["region"], Credentials: cred};
+        }else{
+            auth = &aws.Config{Region: config["region"]};
+        }
+        
+        
         
         var exit bool = false;
         
@@ -47,7 +64,7 @@ func main(){
 }
 
 func set(key string, url string){
-    svc := s3.New(cred);
+    svc := s3.New(auth);
     
     params := &s3.PutObjectInput{
         Bucket:         aws.String(config["bucket"]),
@@ -67,7 +84,7 @@ func set(key string, url string){
 }
 
 func exists(key string)(bool){
-    svc := s3.New(cred);
+    svc := s3.New(auth);
     params := &s3.HeadObjectInput{
         Bucket:               aws.String(config["bucket"]), // Required
         Key:                  aws.String(key),  // Required
