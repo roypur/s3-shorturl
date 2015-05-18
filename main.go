@@ -28,8 +28,6 @@ func main(){
             auth = &aws.Config{Region: config["region"]};
         }
         
-        
-        
         var exit bool = false;
         
         var dialog string;
@@ -37,10 +35,12 @@ func main(){
         var key string;
         if(len(os.Args)==2){
             for(!exit){
-        
+                
                 key = makeKey();
         
-                if(exists(key)){
+                exist,_:=exists(key);
+        
+                if(exist){
                     exit = false;
                 }else{
                     exit = true;
@@ -49,13 +49,17 @@ func main(){
             set(key, os.Args[1]);
             fmt.Println("\nhttp://"+config["domain"]+"/"+key+"\n");
         }else if(len(os.Args)==3){
-            if(exists(os.Args[1])){
+            exist,isEmpty:=exists(os.Args[1]);
+            if(exist && isEmpty){
                 fmt.Println("\nThe given key exists. Do you want to replace it? ( YES / NO )\n")
                 fmt.Scanln(&dialog);
                 if(dialog=="yes" || dialog=="YES" || dialog=="Y" || dialog=="y"){
                 }else{
                     return
                 }
+            }else if(!isEmpty){
+                fmt.Println("\nThe given key is not a redirect, and can not be edited.\n");
+                return
             }
             set(os.Args[1], os.Args[2]);
             fmt.Println("\nhttp://"+config["domain"]+"/"+os.Args[1]+"\n")
@@ -83,15 +87,24 @@ func set(key string, url string){
     }
 }
 
-func exists(key string)(bool){
+func exists(key string)(bool,bool){
     svc := s3.New(auth);
     params := &s3.HeadObjectInput{
         Bucket:               aws.String(config["bucket"]), // Required
         Key:                  aws.String(key),  // Required
     }
-    _,err := svc.HeadObject(params)
+    resp,err := svc.HeadObject(params);
+    
+    var responseLength int64 = *resp.ContentLength;
+    
     if(err!=nil){
-        return false;
+        if(responseLength==0){
+            return false,true;
+        }else{
+            return false,false;
+        }
+    }else if(responseLength==0){
+        return true,true;
     }
-    return true;
+    return true,false;
 }
