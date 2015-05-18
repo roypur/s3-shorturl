@@ -11,16 +11,17 @@ import (
 var config map[string]string;
 
 func getConf()(bool){
-    var home string;
+    var filepath string;
     
     if(runtime.GOOS=="linux"){
-        home=os.Getenv("HOME")
+        filepath=os.Getenv("HOME")+"/.s3-shorturl/config.json";
     }else if(runtime.GOOS=="windows"){
-        home=os.Getenv("HOMEPATH");
+        filepath=os.Getenv("HOMEPATH")+"\\s3-shorturl\\config.json";
     }
     
     
-    file, err := ioutil.ReadFile(home + "/.s3-shorturl/config.json");
+    file, err := ioutil.ReadFile(filepath);
+    
     if(err==nil){
         config = make(map[string]string);
         err = json.Unmarshal(file, &config);
