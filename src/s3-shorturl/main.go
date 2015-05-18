@@ -94,9 +94,10 @@ func exists(key string)(bool,bool){
         Key:                  aws.String(key),  // Required
     }
     resp,err := svc.HeadObject(params);
-    
-    var responseLength int64 = *resp.ContentLength;
-    
+    var responseLength int64;
+    if(err==nil){
+        responseLength = *resp.ContentLength;
+    }
     if(err!=nil){
         if(responseLength==0){
             return false,true;
