@@ -5,12 +5,22 @@ import (
     "fmt"
     "os"
     "encoding/json"
+    "runtime"
 )
 
 var config map[string]string;
 
 func getConf()(bool){
-    file, err := ioutil.ReadFile(os.Getenv("HOME") + "/.s3-shorturl/config.json");
+    var home string;
+    
+    if(runtime.GOOS=="linux"){
+        home=os.Getenv("HOME")
+    }else if(runtime.GOOS=="windows"){
+        home=os.Getenv("HOMEPATH");
+    }
+    
+    
+    file, err := ioutil.ReadFile(home + "/.s3-shorturl/config.json");
     if(err==nil){
         config = make(map[string]string);
         err = json.Unmarshal(file, &config);
